@@ -1,54 +1,71 @@
 package br.com.builder.api.services;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.builder.api.entities.Boleto;
-import br.com.builder.api.requests.BoletoRequest;
+import br.com.builder.api.response.Response;
+import br.com.builder.api.responses.BoletoApiResponse;
+import br.com.builder.api.responses.TokenResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 // @ActiveProfiles("test")
 public class BoletoServicesTest {
     
+
+    private static final String BOLETO_260 = "34191790010104351004791020150008291070026000"; // 2022-09-03
+
     @Autowired
-    private BoletoServices boletoServices = new BoletoServices();
+    private BoletoServices boletoServices;
+
+    @Autowired
+    private TokenServices tokenServices;
+    
+    private String token;
+
+    private Response<BoletoApiResponse> boletoApiResponse;
 
     
-    public static void main(String[] args) {
+    @Before
+	public void setUp() {  
+        System.out.println("Recuperando token");      
+        TokenResponse response = tokenServices.getToken();
+        token = response.getToken();
+
+	}
+    
+    
+    @Test
+    public void calcularBoleto_260_DataPagamento_DataVencimento_Iguais_Test() {        
         
-        // DataUtils.toDate("2022-09-13 14:29:10", DataUtils.yyyyMMdd_HHmmss);
+        System.out.println("Calculando boleto com data de pagamento e vencimento iguais");
 
+        boletoApiResponse = boletoServices.buscarBoletoApi(BOLETO_260, token);
+        System.out.println("Token: " + token);
 
-        BoletoServicesTest teste = new BoletoServicesTest();
-        BoletoRequest request = new BoletoRequest();
-
-        request.setDataPagamento("2022-09-15 14:29:10");
-        request.setDataVencimento("2022-09-13 14:29:10");
-        request.setNumero("34191790010104351004791020150008291070026000");
-        request.setValorBoleto(150.0);
-
-        Boleto boleto = teste.boletoServices.calcularBoleto(request);
-        System.out.println(boleto.toString());
-
+        System.out.println(boletoApiResponse.getData().toString());
+        Boleto calcularBoleto = boletoServices.calcularBoleto(boletoApiResponse.getData(), "2022-09-15");
+        assertTrue(calcularBoleto.getValorBoleto().compareTo(260.0) == 0);
     }
-
-
 
     @Test
-    public void calcularBoletoTest() {
-        BoletoServicesTest teste = new BoletoServicesTest();
-        BoletoRequest request = new BoletoRequest();
+    public void calcularBoleto_260_DataPagamento_1DiaVencimento_Test() {        
+        
+        System.out.println("Calculando boleto com data de pagamento um dia após o vencimento");
 
-        request.setDataPagamento("2022-09-15 14:29:10");
-        request.setDataVencimento("2022-09-13 14:29:10");
-        request.setNumero("34191790010104351004791020150008291070026000");
-        request.setValorBoleto(150.0);
+        boletoApiResponse = boletoServices.buscarBoletoApi(BOLETO_260, token);
+        System.out.println("Token: " + token);
 
-        Boleto boleto = teste.boletoServices.calcularBoleto(request);
-        System.out.println(boleto.toString());
+        System.out.println(boletoApiResponse.getData().toString());
+        Boleto calcularBoleto = boletoServices.calcularBoleto(boletoApiResponse.getData(), "2022-09-16");
+        assertTrue(calcularBoleto.getValorBoleto().compareTo(265.23) == -1);
     }
+
 }

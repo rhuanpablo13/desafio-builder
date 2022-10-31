@@ -33,4 +33,14 @@ public class Response<T> {
 	public void addError(String error) {
 		getErrors().add(error);
 	}
+
+	public void addErrors(List<String> errors) {
+		errors.forEach(e -> {
+			addError(e);
+		});
+	}
+
+	public boolean containErrors() {
+		return getErrors().isEmpty() == false;
+	}
 }

@@ -28,7 +28,10 @@ public class TokenServices {
         
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(uri, entity, String.class);
-        
+        if (response == null || response.getBody() == null || response.getBody().isBlank()) {
+            return null;
+        }
+
         return TokenResponse.jsonToObject(response.getBody());
     }
 }
