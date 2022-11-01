@@ -6,7 +6,7 @@
 <p align="center">🚀  Desafio Builder Boletos
 </p>
 
-### 🏆 Aplicação [Demo](https://dminer.herokuapp.com/)
+### 🏆 Aplicação [Demo](https://desafio-builder.herokuapp.com/api/swagger-ui.html#/)
 
 ### Pré-requisitos
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
