@@ -28,7 +28,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("Desafio Builder API")
-				.description("Documentação da API de acesso aos endpoints do Desafio Builder.").version("1.0")
+				.description("Documentação da API de acesso aos endpoints do Desafio Builder 2.").version("1.0")
 				.build();
 	}
 
