@@ -23,10 +23,10 @@ pipeline {
 			}
 		}
 
-		stage('deploy') {
-			steps {
-			    bat "mvn jar:jar deploy:deploy"
-			}
-		}
+		// stage('deploy') {
+		// 	steps {
+		// 	    bat "mvn jar:jar deploy:deploy"
+		// 	}
+		// }
 	}
 }
